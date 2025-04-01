@@ -4,6 +4,7 @@ import { Calendar, CheckCircle, Trash2, User } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import { toast } from "react-toastify";
 
 const TaskItem = ({ task }) => {
   const dispatch = useDispatch();
@@ -35,6 +36,19 @@ const TaskItem = ({ task }) => {
         return "bg-gray-100 text-gray-800";
     }
   };
+
+    // Handle task completion
+    const handleMarkCompleted = () => {
+      const updatedTask = { ...task, status: "completed" };
+      dispatch(modifyTask(updatedTask)); 
+      toast.success("Task marked as completed!");
+    };
+  
+    // Handle task removal
+    const handleRemoveTask = () => {
+      dispatch(removeTask(task._id));
+      toast.error("Task removed!");
+    };
 
   return (
     <Card className="mb-4 border-l-4 hover:shadow-md transition-all">
@@ -83,10 +97,8 @@ const TaskItem = ({ task }) => {
           <Button
             variant="ghost"
             size="icon"
-            className="text-green-600 hover:text-green-800 bg-gray-100"
-            onClick={() =>
-              dispatch(modifyTask({ ...task, status: "completed" }))
-            }
+            className="text-green-600 hover:text-green-800 bg-gray-100 cursor-pointer"
+            onClick={handleMarkCompleted} // Use onClick instead of onDoubleClick
             aria-label="Mark as completed"
           >
             <CheckCircle className="h-5 w-5" />
@@ -95,8 +107,8 @@ const TaskItem = ({ task }) => {
           <Button
             variant="ghost"
             size="icon"
-            className="text-red-600 hover:text-red-800 bg-gray-100"
-            onClick={() => dispatch(removeTask(task._id))}
+            className="text-red-600 hover:text-red-800 bg-gray-100 cursor-pointer"
+            onClick={handleRemoveTask}
             aria-label="Remove task"
           >
             <Trash2 className="h-5 w-5" />

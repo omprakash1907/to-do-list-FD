@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../redux/feature/authSlice";
 import { loginUser } from "../services/authService";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -26,9 +27,11 @@ const Login = () => {
       }
 
       dispatch(loginSuccess(data));
-      navigate("/");
+      toast.success("Login successful!");
+      navigate("/home");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Please try again.");
+      toast.error(err.response?.data?.message || "Login failed. Please try again.");
+
     }
   };
 
@@ -60,6 +63,9 @@ const Login = () => {
         <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded w-full">
           Login
         </button>
+        <p className="text-sm mt-2 text-center">
+          Don't have an account? <Link to="/register" className="text-blue-500">Register</Link>
+        </p>
       </form>
     </div>
   );
